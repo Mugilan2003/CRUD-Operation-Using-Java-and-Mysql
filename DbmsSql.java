@@ -78,6 +78,7 @@ public class DbmsSql {
 	
 	private void refresh() {
 		clear();
+		table.setModel(loadData());
 	}
 	
 	private DefaultTableModel loadData() {
@@ -203,42 +204,27 @@ public class DbmsSql {
 		}
 	private void delete() {
 		try {
-			String id=tfId.getText();
-			String name=tfName.getText();
-			String mark=tfMark.getText();
-			String city=tfCity.getText();
-			
-			
-			 if(name==null || name.isEmpty() || name.trim().isEmpty()) {
-				 JOptionPane.showMessageDialog(null, "Enter Name");
-				 lbName.requestFocus();
-				 return;
-			 }
-			 if(mark==null || mark.isEmpty() || mark.trim().isEmpty()||Integer.parseInt(mark)<0||Integer.parseInt(mark)>500) {
-				 JOptionPane.showMessageDialog(null, "Enter Mark \nMark should be 0 to 500");
-				 lbMark.requestFocus();
-				 return;
-			 }
-			 if(city==null || city.isEmpty() || city.trim().isEmpty()) {
-				 JOptionPane.showMessageDialog(null, "Enter City");
-				 lbCity.requestFocus();
-				 return;
-			 }
-			 
 				String query="Delete from crud where id=?";
+				
 				if(!tfId.getText().isEmpty()) {
+					
+				int confirm=JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
+				
+				if(confirm==JOptionPane.YES_OPTION) {
 				pst=con.prepareStatement(query);			
 				pst.setString(1,tfId.getText());
-//				pst.setString(2,tfMark.getText());
-//				pst.setString(3,tfCity.getText());
-//				pst.setString(4,tfId.getText());
-				
 				row=pst.executeUpdate();
-				
 				JOptionPane.showMessageDialog(null,String.valueOf("Data Deleted Succesfully\nNumber of row affected : "+row),"PopUp",JOptionPane.PLAIN_MESSAGE);
 				clear();
 				table.setModel(loadData());
+				}
+				if(confirm==JOptionPane.NO_OPTION) {
+					JOptionPane.showMessageDialog(null,"Deletion Cancelled","PopUp",JOptionPane.PLAIN_MESSAGE);
+				}
+				}
 				
+				if(tfId.getText().isEmpty()) {
+					JOptionPane.showMessageDialog(null,String.valueOf("Select a row for Delete"),"PopUp",JOptionPane.PLAIN_MESSAGE);
 				}
 			 	
 			 }
@@ -356,6 +342,11 @@ public class DbmsSql {
 			
 		});
 		
+		JButton btnclear = new JButton("Clear");
+		btnclear.setFont(new Font("Tahoma", Font.BOLD, 13));
+		btnclear.setBounds(119, 319, 89, 23);
+		frmDataCrudOperation.getContentPane().add(btnclear);
+		btnclear.addActionListener(d->clear());
 		
 }
 	public static void main(String[] args) {

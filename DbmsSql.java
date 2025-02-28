@@ -105,9 +105,8 @@ public class DbmsSql {
 				}
 				rows.addElement(newRow);	
 			}
-			
 		return new DefaultTableModel(rows,columnName);//
-		}  
+		}
 		catch(Exception e) {
 			e.printStackTrace();
 		}
@@ -157,6 +156,7 @@ public class DbmsSql {
 			 a.printStackTrace();
 		 }
 	}
+	
 	private void update() {
 		try {
 			String id=tfId.getText();
@@ -210,6 +210,11 @@ public class DbmsSql {
 					
 				int confirm=JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this record?", "Confirm Deletion", JOptionPane.YES_NO_OPTION);
 				
+				if(confirm==JOptionPane.NO_OPTION) {
+					JOptionPane.showMessageDialog(null,"Deletion Cancelled","PopUp",JOptionPane.PLAIN_MESSAGE);
+					return;
+				}
+				
 				if(confirm==JOptionPane.YES_OPTION) {
 				pst=con.prepareStatement(query);			
 				pst.setString(1,tfId.getText());
@@ -218,15 +223,11 @@ public class DbmsSql {
 				clear();
 				table.setModel(loadData());
 				}
-				if(confirm==JOptionPane.NO_OPTION) {
-					JOptionPane.showMessageDialog(null,"Deletion Cancelled","PopUp",JOptionPane.PLAIN_MESSAGE);
 				}
-				}
-				
-				if(tfId.getText().isEmpty()) {
+		
+				else {
 					JOptionPane.showMessageDialog(null,String.valueOf("Select a row for Delete"),"PopUp",JOptionPane.PLAIN_MESSAGE);
 				}
-			 	
 			 }
 			 catch(SQLException a) {
 				 a.printStackTrace();
